@@ -1,11 +1,34 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router";
 import Home from "../views/Home.vue";
+import Signin from '@/views/SignIn.vue'
+import DashBoard from '@/views/DashBoard.vue'
+import FerModule from '@/views/console/FerModule.vue'
+import Profile from '@/views/console/Profile.vue'
+import QueryRecord from '@/views/console/RecordQuery.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
-    name: "Home",
-    component: Home,
+    name: "Signin",
+    component: Signin,
+  },
+  {
+    path: "/DashBoard",
+    name: "DashBoard",
+    component: DashBoard,
+    children: [{
+      path: 'Fer',
+      name: 'Fer',
+      component: FerModule
+    },{
+      path: 'Profile',
+      name: 'Profile',
+      component: Profile
+    },{
+      path: 'QueryRecord',
+      name: 'QueryRecord',
+      component: QueryRecord
+    },]
   },
   {
     path: "/about",
