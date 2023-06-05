@@ -5,6 +5,10 @@ import DashBoard from '@/views/DashBoard.vue'
 import FerModule from '@/views/console/FerModule.vue'
 import Profile from '@/views/console/Profile.vue'
 import QueryRecord from '@/views/console/RecordQuery.vue'
+import DynamicDetail from '@/views/console/DynamicDetail.vue'
+import DynamicList from '@/views/console/DynamicList.vue'
+import Donation from '@/views/console/Donation.vue'
+import SuperProfile from '@/views/console/SuperProfile.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -20,14 +24,30 @@ const routes: Array<RouteRecordRaw> = [
       path: 'Fer',
       name: 'Fer',
       component: FerModule
-    },{
+    }, {
       path: 'Profile',
       name: 'Profile',
       component: Profile
-    },{
+    }, {
       path: 'QueryRecord',
       name: 'QueryRecord',
       component: QueryRecord
+    }, {
+      path: 'DynamicList',
+      name: 'DynamicList',
+      component: DynamicList
+    }, {
+      path: 'DynamicDetail',
+      name: 'DynamicDetail',
+      component: DynamicDetail
+    }, {
+      path: 'Donation',
+      name: 'Donation',
+      component: Donation
+    },{
+      path: 'SuperProfile',
+      name: 'SuperProfile',
+      component: SuperProfile
     },]
   },
   {
