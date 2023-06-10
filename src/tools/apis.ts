@@ -14,7 +14,8 @@ export interface loginBody {
 }
 export type loginResType = string;
 export type loginRes = {
-    status: 'fail'
+    status: 'fail',
+    msg?: string
 } | {
     status: 'success',
     token: string,
@@ -122,7 +123,8 @@ export interface superProfileSuccessRes extends baseSuccessRes {
     }
 }
 export interface editProfileBodySuper extends editProfileBody {
-    userid: number
+    userid: number,
+    autNum: number
 }
 export interface queryQueryRecordBody {
     userid: number,
@@ -170,6 +172,8 @@ const apiURL = {
     donation: '/donation',
     superProfile: '/superProfile',
     queryQueryRecord: '/queryQueryRecord',
+    cancelAccount: '/cancelAccount',
+    deleteDynamic:'/deleteDynamic'
 }
 type fetchAPIResType<T> = { status: 'success', data: T } | { status: 'false', message: string } | { status: 'NoAuth' }
 type fetchAPIRequestType = (
@@ -200,11 +204,16 @@ const apis = {
             .then(function (res: loginRes) {
                 if (res.status == 'success') {
                     localStorage.setItem('auth', res.token);
-                    if (res.permission)
-                        localStorage.setItem('role', String(res.permission))
+                    localStorage.setItem('role', String(res.permission))
                     result = 'success'
                 }
-                else result = 'error'
+                else {
+                    if(res.msg){
+                        result=res.msg
+                    }else{
+                        result='error'
+                    }
+                }
             })
             .catch(() => {
                 result = 'error'
@@ -290,6 +299,23 @@ const apis = {
     },
     queryQueryRecord: async (arg0: queryQueryRecordBody): Promise<queryQueryRecordSuccessRes | baseFailRes> => {
         return fetchAPI(baseURL + apiURL.queryQueryRecord, {
+            body: JSON.stringify(arg0),
+            method: 'POST',
+        })
+    },
+    cancelAccount: async (): Promise<queryQueryRecordSuccessRes | baseFailRes> => {
+        return fetchAPI(baseURL + apiURL.cancelAccount, {
+            method: 'POST',
+        })
+    },
+    cancelAccountSuper: async (arg0: { userid: number }): Promise<queryQueryRecordSuccessRes | baseFailRes> => {
+        return fetchAPI(baseURL + apiURL.cancelAccount, {
+            body: JSON.stringify(arg0),
+            method: 'POST',
+        })
+    },
+    deleteDynamic:async (arg0: { dynamicID: number }): Promise<queryQueryRecordSuccessRes | baseFailRes> => {
+        return fetchAPI(baseURL + apiURL.deleteDynamic, {
             body: JSON.stringify(arg0),
             method: 'POST',
         })

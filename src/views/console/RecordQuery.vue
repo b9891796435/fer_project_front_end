@@ -12,7 +12,7 @@
     </a-table>
 </template>
 <script setup lang="ts">
-import { defineProps, ref } from 'vue';
+import { ref } from 'vue';
 import apis, { recordItem, EMOTIONS } from '@/tools/apis'
 import { message } from 'ant-design-vue';
 const current = ref(1);

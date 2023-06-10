@@ -20,6 +20,9 @@
                 <a-form-item label="密码">
                     <a-input v-model:value="formState.PASSWORD" />
                 </a-form-item>
+                <a-form-item label="权限码">
+                    <a-input-number v-model:value="formState.autNum" />
+                </a-form-item>
             </a-form>
         </a-modal>
         <a-modal v-model:visible="queryVisible" title="查询记录" @ok="() => queryVisible = false"
@@ -29,7 +32,7 @@
 
                 <template #bodyCell="{ column, record }">
                     <template v-if="column.key === 'QUERYTIME'">
-                        {{ new Date(record.QUERYTIME*1000).toISOString() }}
+                        {{ new Date(record.QUERYTIME * 1000).toISOString() }}
                     </template>
                 </template>
             </a-table>
@@ -40,6 +43,7 @@
                 <template v-if="column.key === 'action'">
                     <a-button type="text" @click="handleEdit(record.USERID)">修改</a-button>
                     <a-button v-if="record.AUT_NUM > 0" type="text" @click="selectQuery(record.USERID)">查询记录</a-button>
+                    <a-button type="text" @click="handleEdit(record.USERID)">注销</a-button>
                 </template>
             </template>
         </a-table>
@@ -56,6 +60,7 @@ const formState = ref<editProfileBodySuper>({
     SEX: 'F',
     UNAME: '',
     PASSWORD: '',
+    autNum: 0
 });
 
 const current = ref(1);
@@ -74,8 +79,16 @@ const query = async (page: number) => {
 }
 const handleEdit = (userid: number) => {
     let selected = dataSource.value.find(item => item.USERID == userid) as profileDetailForSuperItem
-    formState.value = { ...selected, userid: selected.USERID }
+    formState.value = { ...selected, userid: selected.USERID, autNum: selected.AUT_NUM }
     editVisible.value = true;
+}
+const handleCancelAccount = (userid: number) => {
+    if (window.confirm('该操作不可逆，是否确认注销？'))
+        apis.cancelAccountSuper({ userid }).then(res => {
+            if (res.status == 'success') {
+                message.success('注销成功')
+            }
+        });
 }
 const onSubmit = () => {
     apis.editProfile({
@@ -88,6 +101,7 @@ const onSubmit = () => {
         query(current.value - 1)
     });
 };
+
 const columns = [
     {
         dataIndex: 'NAME',

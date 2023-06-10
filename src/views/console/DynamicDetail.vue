@@ -6,7 +6,8 @@
                 <div><like-outlined
                         @click="() => 'DY_CONTENT' in item ? like_dynamic(item.DYNAMIC_ID) : like_comment(item.COMMENT_ID)" />{{
                             item.LIKE_COUNT }}</div>
-                <div v-if=" 'DY_CONTENT' in item ">{{ mainEmotion }}</div>
+                <div v-if="'DY_CONTENT' in item">{{ mainEmotion }}</div>
+                <div v-if="role >= 1 && 'DY_CONTENT' in item" @click="deleteDynamic" style="cursor: pointer;">删除动态</div>
             </div>
             <div class="content">{{ 'DY_CONTENT' in item ? item.DY_CONTENT : item.COMMENT_CONTENT }}</div>
         </div>
@@ -23,6 +24,8 @@ import apis, { dynamicItemSummery, commentItem, EMOTIONS } from '@/tools/apis';
 import { message } from 'ant-design-vue';
 import { LikeOutlined } from '@ant-design/icons-vue'
 import { computed, onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
+const router = useRouter();
 const dataSource = ref<(dynamicItemSummery | commentItem)[]>([history.state.cur_dynamic]);
 const page = ref(0);
 const count = ref(0);
@@ -30,6 +33,7 @@ const comment = ref('')
 const total = computed(() => {
     return Math.ceil(count.value / 10)
 })
+const role = Number(localStorage.getItem('role'))
 const getComment = async (page: number) => {
     await apis.dynamicDetail({ dynamicID: history.state.cur_dynamic.DYNAMIC_ID, page }).then(res => {
         if (res.status == 'success') {
@@ -39,6 +43,14 @@ const getComment = async (page: number) => {
     }).then(() => {
         if (page == 0) {
             dataSource.value = [history.state.cur_dynamic, ...dataSource.value]
+        }
+    })
+}
+const deleteDynamic = () => {
+    apis.deleteDynamic({ dynamicID: history.state.cur_dynamic.DYNAMIC_ID }).then(res => {
+        if (res.status == 'success') {
+            message.success('操作成功')
+            router.push('DynamicList');
         }
     })
 }

@@ -24,6 +24,7 @@
     </a-form-item>
     <a-form-item :wrapper-col="{ span: 24 }">
       <a-button type="primary" html-type="submit" @click="onSubmit" style="margin-left: 100px;">确认更改</a-button>
+      <a-button @click="onCancelAccount" style="margin-left: 100px;">注销账户</a-button>
     </a-form-item>
   </a-form>
   <a-table :columns="columns" :data-source="dataSource" style="margin: 0 64px;"
@@ -87,7 +88,14 @@ const onSubmit = () => {
     }
   });
 };
-
+const onCancelAccount = () => {
+  if (window.confirm('该操作不可逆，是否确认注销？'))
+    apis.cancelAccount().then(res => {
+      if (res.status == 'success') {
+        message.success('注销成功')
+      }
+    });
+}
 const current = ref(1);
 const total = ref(0);
 const dataSource = ref<recordItem[]>([]);
